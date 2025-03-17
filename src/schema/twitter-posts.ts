@@ -1,13 +1,10 @@
-import { drizzle } from 'drizzle-orm/d1';
+import { sql } from 'drizzle-orm';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-export interface Env {
-  <BINDING_NAME>: D1Database;
-}
-
-export default {
-  async fetch(request: Request, env: Env) {
-    const db = drizzle(env.<BINDING_NAME>);
-    const result = await db.select().from(users).all()
-    return Response.json(result);
-  },
-};
+export const twitterPosts = sqliteTable('twitter_posts', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  url: text('url').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
