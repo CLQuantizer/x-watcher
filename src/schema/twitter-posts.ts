@@ -1,17 +1,13 @@
-import { sql } from 'drizzle-orm';
-import { text, integer, sqliteTable } from 'drizzle-orm/sqlite';
+import { drizzle } from 'drizzle-orm/d1';
 
-export const twitterPosts = sqliteTable('twitter_posts', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  url: text('url').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  lastChecked: integer('last_checked', { mode: 'timestamp' })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  isActive: integer('is_active', { mode: 'boolean' }).default(true).notNull(),
-});
+export interface Env {
+  <BINDING_NAME>: D1Database;
+}
 
-export type TwitterPost = typeof twitterPosts.$inferSelect;
-export type NewTwitterPost = typeof twitterPosts.$inferInsert; 
+export default {
+  async fetch(request: Request, env: Env) {
+    const db = drizzle(env.<BINDING_NAME>);
+    const result = await db.select().from(users).all()
+    return Response.json(result);
+  },
+};

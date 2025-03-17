@@ -14,20 +14,15 @@
 		"crons": [
 			"* * * * *"
 		]
-	}
-	/**
-	 * Smart Placement
-	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": { "mode": "smart" },
-
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-
+	},
+	"d1_databases": [
+        {
+            "binding": "X_WATCHER_DB",
+            "database_name": "x-watcher",
+            "database_id": "YOUR_DB_ID",
+            "migrations_dir": "drizzle/migrations"
+        }
+    ]
 	/**
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
