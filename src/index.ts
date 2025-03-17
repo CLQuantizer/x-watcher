@@ -1,9 +1,12 @@
 import { drizzle } from 'drizzle-orm/d1';
-import { twitterPosts } from './schema/twitter-posts';
+import { twitterPosts } from './schema/xPosts';
+import { fetchFromJina } from './services/jina';
+
 export interface Env {
 	X_WATCHER_DB: D1Database;
-  }
-  
+	JINA_API_KEY: string;
+}
+
 export default {
 	// The scheduled handler is invoked at the interval set in our wrangler.jsonc's
 	// [[triggers]] configuration.
@@ -19,8 +22,18 @@ export default {
 
 	async fetch(request: Request, env: Env) {
 		const db = drizzle(env.X_WATCHER_DB);
-		const result = await db.select().from(twitterPosts).all()
-		console.log(result)
-		return Response.json(result);
+		const posts = await db.select().from(twitterPosts).all();
+		
+		// Fetch Jina data for each post's URL
+		for (const post of posts) {
+			try {
+				const jinaData = await fetchFromJina(post.url, env.JINA_API_KEY);
+				console.log(`Jina data for post ${post.id}:`, jinaData);
+			} catch (error) {
+				console.error(`Error fetching Jina data for post ${post.id}:`, error);
+			}
+		}
+		
+		return Response.json(posts);
 	},
 } satisfies ExportedHandler<Env>;
