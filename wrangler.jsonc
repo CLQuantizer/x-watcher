@@ -16,13 +16,13 @@
 		]
 	},
 	"d1_databases": [
-        {
-            "binding": "X_WATCHER_DB",
-            "database_name": "x-watcher",
-            "database_id": "YOUR_DB_ID",
-            "migrations_dir": "drizzle/migrations"
-        }
-    ]
+		{
+			"binding": "X_WATCHER_DB",
+			"database_name": "x-watcher",
+			"database_id": "d3f44c8f-80a5-4cbb-995a-1e6677bf7910",
+			"migrations_dir": "drizzle/migrations"
+		}
+	]
 	/**
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
