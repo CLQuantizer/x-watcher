@@ -16,10 +16,11 @@ export default {
 		// In this template, we'll just log the result:
 		console.log(`trigger fired at ${event.cron}: ${wasSuccessful}`);
 	},
-	
+
 	async fetch(request: Request, env: Env) {
 		const db = drizzle(env.X_WATCHER_DB);
 		const result = await db.select().from(twitterPosts).all()
+		console.log(result)
 		return Response.json(result);
 	},
 } satisfies ExportedHandler<Env>;
