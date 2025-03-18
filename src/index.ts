@@ -1,10 +1,11 @@
+import puppeteer from "@cloudflare/puppeteer";
 import { drizzle } from 'drizzle-orm/d1';
 import { twitterPosts } from './schema/xPosts';
-import { fetchFromJina } from './services/jina';
 
 export interface Env {
 	X_WATCHER_DB: D1Database;
 	JINA_API_KEY: string;
+	X_WATCHER_BROWSER: Fetcher;
 }
 
 export default {
@@ -24,14 +25,14 @@ export default {
 		const db = drizzle(env.X_WATCHER_DB);
 		const posts = await db.select().from(twitterPosts).all();
 		
-		// Fetch Jina data for each post's URL
-		for (const post of posts) {
-			try {
-				const jinaData = await fetchFromJina(post.url, env.JINA_API_KEY);
-				console.log(`Jina data for post ${post.id}:`, jinaData);
-			} catch (error) {
-				console.error(`Error fetching Jina data for post ${post.id}:`, error);
-			}
+		for (const post of posts) {		
+			// implement webbrowsing using cloudflare browser
+			const browser = await puppeteer.launch(env.X_WATCHER_BROWSER);
+			const page = await browser.newPage();
+			await page.goto(post.url);
+			const content = await page.content();
+			console.log(content);
+			await browser.close();
 		}
 		
 		return Response.json(posts);

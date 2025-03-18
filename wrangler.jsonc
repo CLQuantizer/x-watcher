@@ -15,6 +15,9 @@
 			"0 * * * *"
 		]
 	},
+	"browser": {
+		"binding": "X_WATCHER_BROWSER"
+	},
 	"d1_databases": [
 		{
 			"binding": "X_WATCHER_DB",

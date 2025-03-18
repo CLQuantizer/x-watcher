@@ -9,12 +9,15 @@
 		"cf-typegen": "wrangler types"
 	},
 	"devDependencies": {
+		"@cloudflare/puppeteer": "^0.0.14",
 		"@cloudflare/workers-types": "^4.20250313.0",
 		"drizzle-kit": "^0.30.5",
 		"typescript": "^5.5.2",
 		"wrangler": "^4.0.0"
 	},
 	"dependencies": {
+		"@ai-sdk/google": "^1.1.25",
+		"ai": "^4.1.61",
 		"drizzle-orm": "^0.40.0",
 		"ky": "^1.7.5"
 	}
