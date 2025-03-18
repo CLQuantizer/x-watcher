@@ -14,27 +14,24 @@ interface EngagementMetrics {
   reposts: number;
   likes: number;
   bookmarks: number;
-  views: number;
 }
 
 // Function to extract metrics using regex
 function extractEngagementMetrics(content: string): EngagementMetrics | null {
   // Individual regex patterns for each metric
   const repliesRegex = /aria-label="(\d+) Replies\. Reply"/;
-  const repostsRegex = /aria-label="(\d+) Reposts\. Repost"/;
+  const repostsRegex = /aria-label="(\d+) reposts\. Repost"/;
   const likesRegex = /aria-label="(\d+) Likes\. Like"/;
   const bookmarksRegex = /aria-label="(\d+) Bookmarks\. Bookmark"/;
-  const viewsRegex = /aria-label="(\d+) Views"/;
 
   // Extract each metric individually
   const repliesMatch = content.match(repliesRegex);
   const repostsMatch = content.match(repostsRegex);
   const likesMatch = content.match(likesRegex);
   const bookmarksMatch = content.match(bookmarksRegex);
-  const viewsMatch = content.match(viewsRegex);
 
   // If none of the metrics are found, return null
-  if (!repliesMatch && !repostsMatch && !likesMatch && !bookmarksMatch && !viewsMatch) {
+  if (!repliesMatch && !repostsMatch && !likesMatch && !bookmarksMatch) {
     console.error('No metrics found in content');
     return null;
   }
@@ -45,7 +42,6 @@ function extractEngagementMetrics(content: string): EngagementMetrics | null {
     reposts: repostsMatch ? parseInt(repostsMatch[1], 10) : 0,
     likes: likesMatch ? parseInt(likesMatch[1], 10) : 0,
     bookmarks: bookmarksMatch ? parseInt(bookmarksMatch[1], 10) : 0,
-    views: viewsMatch ? parseInt(viewsMatch[1], 10) : 0
   };
 }
 
