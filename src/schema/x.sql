@@ -9,10 +9,10 @@ CREATE TABLE twitter_posts (
 create table twitter_posts_snapshots (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     post_id INTEGER NOT NULL,
-    likes INTEGER NOT NULL,
-    replies INTEGER NOT NULL,
-    retweets INTEGER NOT NULL,
-    bookmarks INTEGER NOT NULL,
+    likes INTEGER NOT NULL DEFAULT 0,
+    replies INTEGER NOT NULL DEFAULT 0,
+    retweets INTEGER NOT NULL DEFAULT 0,
+    bookmarks INTEGER DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 -- add index on post_id
