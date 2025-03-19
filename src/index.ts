@@ -58,17 +58,17 @@ export default {
     for (const post of posts) {
       try {
         // Launch browser and navigate to post URL
-        const browser = await puppeteer.launch(env.X_WATCHER_BROWSER);
-        const page = await browser.newPage();
-        await page.goto(post.url);
-        await page.waitForSelector('article');
-        const content = await page.content();        
-        const metrics = extractEngagementMetrics(content);
+        // const browser = await puppeteer.launch(env.X_WATCHER_BROWSER);
+        // const page = await browser.newPage();
+        // await page.goto(post.url);
+        // await page.waitForSelector('article');
+        // const content = await page.content();        
+        // const metrics = extractEngagementMetrics(content);
         
         const res = await fetchFromJina(post.url, env.JINA_API_KEY);
         console.log(res);
-        const analysis = await analyzePost(res, env.GEMINI_API_KEY);
-        console.log('analysis', analysis);
+        const metrics = await analyzePost(res, env.GEMINI_API_KEY);
+        console.log('analysis', metrics);
         // Add to results
         results.push({
           id: post.id,
@@ -76,7 +76,7 @@ export default {
           metrics
         });
         
-        await browser.close();
+        // await browser.close();
       } catch (error:any) {
         console.error(`Error processing post ${post.id}: ${error.message}`);
         results.push({
