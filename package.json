@@ -16,6 +16,7 @@
 		"wrangler": "^4.0.0"
 	},
 	"dependencies": {
+		"@ai-sdk/google": "^1.1.26",
 		"ai": "^4.1.61",
 		"drizzle-orm": "^0.40.0",
 		"ky": "^1.7.5"

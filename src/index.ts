@@ -1,19 +1,14 @@
 import puppeteer from "@cloudflare/puppeteer";
 import { drizzle } from 'drizzle-orm/d1';
 import { twitterPosts } from './schema/xPosts';
-
+import { fetchFromJina } from "./services/jina";
+import { EngagementMetrics } from "./schema/twitterPostMetrics";
+import { analyzePost } from "./services/ai";
 export interface Env {
   X_WATCHER_DB: D1Database;
   JINA_API_KEY: string;
+  GEMINI_API_KEY: string;
   X_WATCHER_BROWSER: Fetcher;
-}
-
-// Interface for the engagement metrics
-interface EngagementMetrics {
-  replies: number;
-  reposts: number;
-  likes: number;
-  bookmarks: number;
 }
 
 // Function to extract metrics using regex
@@ -25,10 +20,12 @@ function extractEngagementMetrics(content: string): EngagementMetrics | null {
   const bookmarksRegex = /aria-label="(\d+) Bookmarks\. Bookmark"/;
 
   // Extract each metric individually
+  const viewsRegex = /aria-label="(\d+) views\. View"/;
   const repliesMatch = content.match(repliesRegex);
   const repostsMatch = content.match(repostsRegex);
   const likesMatch = content.match(likesRegex);
   const bookmarksMatch = content.match(bookmarksRegex);
+  const viewsMatch = content.match(viewsRegex);
 
   // If none of the metrics are found, return null
   if (!repliesMatch && !repostsMatch && !likesMatch && !bookmarksMatch) {
@@ -38,6 +35,7 @@ function extractEngagementMetrics(content: string): EngagementMetrics | null {
 
   // Extract and parse numbers from the matched groups
   return {
+    views: viewsMatch ? parseInt(viewsMatch[1], 10) : 0,
     replies: repliesMatch ? parseInt(repliesMatch[1], 10) : 0,
     reposts: repostsMatch ? parseInt(repostsMatch[1], 10) : 0,
     likes: likesMatch ? parseInt(likesMatch[1], 10) : 0,
@@ -63,11 +61,14 @@ export default {
         const browser = await puppeteer.launch(env.X_WATCHER_BROWSER);
         const page = await browser.newPage();
         await page.goto(post.url);
-		await page.waitForSelector('article');
-		const content = await page.content();
-        
+        await page.waitForSelector('article');
+        const content = await page.content();        
         const metrics = extractEngagementMetrics(content);
         
+        const res = await fetchFromJina(post.url, env.JINA_API_KEY);
+        console.log(res);
+        const analysis = await analyzePost(res, env.GEMINI_API_KEY);
+        console.log('analysis', analysis);
         // Add to results
         results.push({
           id: post.id,
